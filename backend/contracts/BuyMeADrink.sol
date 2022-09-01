@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 contract BuyMeADrink{
 
+    event CreatorAdded(address creatorAddress, string username, string name, string fieldOfWork, string bio, uint8 age);
+    event DonationAdded(string name, string message, uint256 amount, address creatorAddress);
     struct Creator{
         address creatorAddress;
         string username;
@@ -44,6 +46,7 @@ contract BuyMeADrink{
     function addCreator(string memory _username, string memory _name, string memory _fieldOfWork, string memory _bio, uint8 _age) public {
         countCreators += 1;
         creators[countCreators] = Creator(msg.sender,_username, _name, _fieldOfWork, _bio, _age);
+        emit CreatorAdded(msg.sender,_username, _name, _fieldOfWork, _bio, _age);
     }
 
     function donate(string memory _name, string memory _message, uint256 _creatorId, uint256 _amount) public payable{
@@ -53,5 +56,6 @@ contract BuyMeADrink{
         countDonations += 1;
         donations[countDonations] = Donation(_name, _message, _amount);
         donationByAddress[creatorAddress].push(Donation(_name, _message, _amount));
+        emit DonationAdded(_name, _message, _amount, creatorAddress);
     }
 }
